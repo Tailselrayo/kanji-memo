@@ -6,6 +6,7 @@ import { GameCard } from "./GameCard";
 
 interface GameLayoutProps {
     kanjis: Kanji[]
+    score: number;
     onVictory: () => void;
     onPairMatched: (isMatched: boolean) => void;
 }
@@ -48,10 +49,13 @@ export function GameLayout(props: GameLayoutProps) {
     }, [selectedKanji, selectedMeaning])
 
     useEffect(() => {
+        if (props.kanjis.length===shuffledKanjis.length) {
+            return;
+        }
         setShuffledKanjis(shuffleTab(props.kanjis));
         setShuffledMeanings(shuffleTab(props.kanjis));
         setFoundKanjis([]);
-    }, [props.kanjis])
+    })
 
     useEffect(()=>{
         if (foundKanjis.length===props.kanjis.length) {
@@ -60,6 +64,9 @@ export function GameLayout(props: GameLayoutProps) {
     }, [foundKanjis])
 
     return (
+        <>
+        <Title ta="center" color="gray.2">Score : {props.score}</Title>
+
         <Group grow>
             <Group position="right">
                 <SimpleGrid cols={step}>
@@ -98,5 +105,6 @@ export function GameLayout(props: GameLayoutProps) {
                 </SimpleGrid>
             </Group>
         </Group>
+    </>
     )
 }

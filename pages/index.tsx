@@ -1,6 +1,6 @@
 import { IdentityModal } from '@/components/IdentityModal'
 import { Layout } from '@/components/Layout'
-import { ActionIcon, Affix, Button, Stack, Text} from '@mantine/core'
+import { ActionIcon, Affix, Button, Stack, Text } from '@mantine/core'
 import { useDisclosure, useInputState, useLocalStorage } from '@mantine/hooks'
 import { IconLogout } from '@tabler/icons-react'
 import Link from 'next/link'
@@ -58,15 +58,15 @@ export default function Home() {
         onRegister={onRegister}
         onTabChange={() => setIsError(false)}
       />
-      <Layout currentUser={currentUser} isSoundOn={isSoundOn} onSoundChange={()=>setIsSoundOn(!isSoundOn)}>
+      <Layout isSoundOn={isSoundOn} onSoundChange={() => setIsSoundOn(!isSoundOn)} isOnHome>
         <Stack align="center">
           <Link style={{ display: "flex", textDecoration: "none", width: "50%" }} href="/choose-level">
-            <Button w="100%" variant="gradient" gradient={{ from: "red", to: "orange" }} h={50}>
-              <Text fz="xl">Play</Text>
+            <Button size="xl" w="100%" variant="gradient" gradient={{ from: "red", to: "orange" }} h={50}>
+              Play
             </Button>
           </Link>
-          <Button w="50%" h={50} variant="gradient" gradient={{ from: "blue", to: "teal" }}>
-            <Text fz="xl">Shop</Text>
+          <Button size="xl" w="50%" h={50} variant="gradient" gradient={{ from: "blue", to: "teal" }}>
+            Shop
           </Button>
         </Stack>
         <Affix position={{ right: 20, bottom: 20 }}>
