@@ -1,5 +1,6 @@
 import { HomeIconMenu } from '@/components/HomeIconMenu'
 import { IdentityModal } from '@/components/IdentityModal'
+import { ProfilePicture } from '@/components/ProfilePicture'
 import { ActionIcon, Affix, Avatar, Button, Group, Modal, Stack, Text, TextInput } from '@mantine/core'
 import { useDisclosure, useInputState, useLocalStorage } from '@mantine/hooks'
 import { IconLogout } from '@tabler/icons-react'
@@ -11,7 +12,7 @@ export default function Home() {
   const [users, setUsers] = useLocalStorage<string[]>({ key: "users", defaultValue: [] })
   const [isError, setIsError] = useState(false);
   const [inputValue, setInputValue] = useInputState("");
-  const [isSoundOn, setIsSoundOn] = useState(true);
+  const [isSoundOn, setIsSoundOn] = useLocalStorage<boolean>({key: "isSoundOn", defaultValue: true});
   const [currentUser, setCurrentUser] = useLocalStorage({ key: "currentUser" });
   const [opened, modalHandlers] = useDisclosure(true);
 
@@ -61,12 +62,9 @@ export default function Home() {
       />
       <Stack h="100%" w="100%">
         <Group h="60%" align="apart" grow>
-          <Stack align="left">
-            <Avatar src="/temporary_avatar.svg" alt="pp" size={100} radius="xl" />
-            <Text color="gray.1">{`Welcome, ${currentUser?currentUser:"guest"}`}</Text>
-          </Stack>
+          <ProfilePicture currentUser={currentUser} />
           <Stack w="60%" align="center" justify="center">
-            <Link style={{display: "flex", textDecoration: "none", width: "100%"}} href="/game">
+            <Link style={{display: "flex", textDecoration: "none", width: "100%"}} href="/choose-level">
               <Button w="100%" variant="gradient" gradient={{ from: "red", to: "orange" }} h={50}>
                 <Text fz="xl">Play</Text>
               </Button>
