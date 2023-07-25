@@ -10,7 +10,7 @@ interface HomeIconMenuProps {
 export function HomeIconMenu(props: HomeIconMenuProps) {
     const iconSize = props.iconSize?props.iconSize:50
     return (
-        <Group position="right">
+        <Group h="100%" position="right">
               <ActionIcon c="blue" size={iconSize}>
                 <IconInfoSquareFilled size={iconSize} />
               </ActionIcon>
