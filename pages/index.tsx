@@ -1,7 +1,10 @@
 import { IdentityModal } from '@/components/IdentityModal'
 import { Layout } from '@/components/Layout'
+import { User } from '@/types/User'
+import { createUser, selectUser } from '@/utils/supabase'
 import { ActionIcon, Affix, Button, Stack, Text } from '@mantine/core'
 import { useDisclosure, useInputState, useLocalStorage } from '@mantine/hooks'
+import { PostgrestSingleResponse } from '@supabase/supabase-js'
 import { IconLogout } from '@tabler/icons-react'
 import Link from 'next/link'
 import { FormEvent, useEffect, useState } from 'react'
@@ -11,36 +14,34 @@ export default function Home() {
   const [isError, setIsError] = useState(false);
   const [inputValue, setInputValue] = useInputState("");
   const [isSoundOn, setIsSoundOn] = useLocalStorage<boolean>({ key: "isSoundOn", defaultValue: true });
-  const [currentUser, setCurrentUser] = useLocalStorage({ key: "currentUser" });
+  const [currentUser, setCurrentUser] = useLocalStorage<User|null>({ key: "currentUser", defaultValue: null });
   const [opened, modalHandlers] = useDisclosure(true);
 
-  const onRegister = (e: FormEvent) => {
+  const onRegister = async (e: FormEvent) => {
     e.preventDefault();
-    if (onIdentification(users.includes(inputValue))) {
-      setUsers(users.concat([inputValue]))
-    }
+    onIdentification((await createUser(inputValue))) 
+    
 
   }
 
-  const onLogin = (e: FormEvent) => {
+  const onLogin = async (e: FormEvent) => {
     e.preventDefault();
-    onIdentification(!users.includes(inputValue))
+    onIdentification(await selectUser(inputValue))
   }
 
-  const onIdentification = (error: boolean) => {
-    if (error) {
+  const onIdentification = (data: PostgrestSingleResponse<User>) => {
+    if (!(data.status === 201||data.status===200)) {
       setIsError(true)
-      return !error
+      return;
     }
-    setCurrentUser(inputValue);
+    setCurrentUser(data.data);
     setInputValue("");
     modalHandlers.close();
     setIsError(false);
-    return !error
   }
 
   const onLogout = () => {
-    setCurrentUser("");
+    setCurrentUser(null);
     modalHandlers.open();
   }
 
