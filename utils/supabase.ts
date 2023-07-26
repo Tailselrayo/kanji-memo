@@ -10,3 +10,12 @@ export async function selectUser(username: string) {
     const data = await supabase.from("users").select().eq("username", username).single();
     return data
 }
+
+export async function updateKanji(id: number, kanji: string, xp: number) {
+    try {
+        const data = await supabase.from("kanji-levels").select().match({kanji, user: id}).single();
+        return(await supabase.from("kanji-levels").update({xp: data.data.xp + xp}).match({kanji, user: id}))
+    } catch (error) {
+        return(await supabase.from("kanji-levels").insert({user: id, kanji, xp}))
+    }
+}

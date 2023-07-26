@@ -1,13 +1,16 @@
 import { GameLayout } from "@/components/GameLayout";
 import { Layout } from "@/components/Layout";
 import { Kanji } from "@/types/Kanji";
+import { User } from "@/types/User";
 import { getKanjisFromAPI } from "@/utils/getKanjisFromAPI";
 import { getKanjisInfo } from "@/utils/getKanjisInfo";
+import { updateKanji } from "@/utils/supabase";
 import { Button, Stack, Title } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import { GetServerSidePropsContext } from "next";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 interface GameProps {
     error?: string;
@@ -51,14 +54,22 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 export default function Game(props: GameProps) {
     const [isSoundOn, setIsSoundOn] = useLocalStorage<boolean>({ key: "isSoundOn" })
     const [localBestScore, setLocalBestScore] = useLocalStorage({ key: "userPB", defaultValue: 0 });
+    const [currentUser] = useLocalStorage<User|null>({key: "currentUser"})
+    const router = useRouter();
     const [step, setStep] = useState(1);
     const [hasWon, setHasWon] = useState(false);
     const [score, setScore] = useState(0);
+
 
     const onStepVictory = () => {
         if (step === 3) {
             setHasWon(true);
             setScore(score + 1000);
+            if (currentUser) {
+                props.kanji.forEach( async (kanji, index) => {
+                    await updateKanji(currentUser.id, kanji.kanji, Math.ceil(3-index/4))
+                })
+            }
             return;
         }
         setScore(score + (step === 2 ? 500 : 200))
@@ -75,14 +86,13 @@ export default function Game(props: GameProps) {
     }
 
 
-    const onRestart = () => {
-        setHasWon(false);
-        setStep(1);
+    useEffect(()=> {
         if (score > localBestScore) {
             setLocalBestScore(score);
         }
-        setScore(0);
-    }
+    },[score, localBestScore])
+        
+
 
     return (
         <Layout isSoundOn={isSoundOn} onSoundChange={() => setIsSoundOn(!isSoundOn)}>
@@ -90,7 +100,7 @@ export default function Game(props: GameProps) {
                 <Stack mx="auto" w="50%" align="center">
                     <Title color="gray.1">Congrats ! Your score is {score}</Title>
                     <Stack w="100%">
-                        <Button w="100%" size="xl" onClick={onRestart} variant="gradient" gradient={{ from: "lime", to: "green" }}>
+                        <Button w="100%" size="xl" onClick={router.reload} variant="gradient" gradient={{ from: "lime", to: "green" }}>
                             Play again
                         </Button>
                         <Link href="/choose-level" style={{ width: "100%" }}>
