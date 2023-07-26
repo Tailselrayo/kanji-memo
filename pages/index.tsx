@@ -1,7 +1,7 @@
 import { IdentityModal } from '@/components/IdentityModal'
 import { Layout } from '@/components/Layout'
 import { User } from '@/types/User'
-import { createUser, selectUser } from '@/utils/supabase'
+import { createUser, getPb, selectUser } from '@/utils/supabase'
 import { ActionIcon, Affix, Button, Stack, Text } from '@mantine/core'
 import { useDisclosure, useInputState, useLocalStorage } from '@mantine/hooks'
 import { PostgrestSingleResponse } from '@supabase/supabase-js'
@@ -11,10 +11,12 @@ import { FormEvent, useEffect, useState } from 'react'
 
 export default function Home() {
   const [users, setUsers] = useLocalStorage<string[]>({ key: "users", defaultValue: [] })
-  const [isError, setIsError] = useState(false);
-  const [inputValue, setInputValue] = useInputState("");
   const [isSoundOn, setIsSoundOn] = useLocalStorage<boolean>({ key: "isSoundOn", defaultValue: true });
   const [currentUser, setCurrentUser] = useLocalStorage<User|null>({ key: "currentUser", defaultValue: null });
+  const [userPb, setUserPb] = useLocalStorage<User|null>({key: "userPB", defaultValue: null});
+  const [isError, setIsError] = useState(false);
+  const [inputValue, setInputValue] = useInputState("");
+
   const [opened, modalHandlers] = useDisclosure(true);
 
   const onRegister = async (e: FormEvent) => {
