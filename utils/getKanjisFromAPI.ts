@@ -1,4 +1,4 @@
-export function getKanjisFromAPI(list: string[], nbKanji=16) {
+export function getKanjisFromAPI(list: string[], nbKanji=12) {
     const kanjiList = [];
     for (let i=0; i<nbKanji; i++) {
         const rdNb = Math.floor(Math.random()*list.length)

@@ -28,7 +28,7 @@ export function GameCard(props: GameCardProps) {
             withBorder
             style={{ borderColor: props.isFound ? "green" : "black" }}
         >
-            {(!props.isDisabled&&props.isTurned) ? ((props.type === "kanji") ?
+            {(!props.isDisabled && props.isTurned) ? ((props.type === "kanji") ?
                 <>
                     <Title ta="center" fz="xl">{props.kanji}</Title>
                     <Text ta="center" fz="md">
@@ -37,7 +37,10 @@ export function GameCard(props: GameCardProps) {
                         {props.on_readings[0]}
                     </Text>
                 </> :
-                <Text ta="center">{props.meanings[0]}</Text>) :
+                <>
+                    <Text ta="center">{props.meanings[0]}</Text>
+                    <Text ta="center">{props.meanings[1]}</Text>
+                </>) :
                 <></>
             }
         </Card>

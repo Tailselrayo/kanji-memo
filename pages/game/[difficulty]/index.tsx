@@ -40,10 +40,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
             props: { error: responseKanjiList.statusText }
         })
     }
-    const gameKanjis = getKanjisFromAPI(await responseKanjiList.json());
-    return ({
-        props: { difficulty: difficulty, kanji: await getKanjisInfo(gameKanjis) }
-    })
+    else {
+        const gameKanjis = getKanjisFromAPI(await responseKanjiList.json());
+        return ({
+            props: { difficulty: difficulty, kanji: await getKanjisInfo(gameKanjis) }
+        })
+    }
 }
 
 export default function Game(props: GameProps) {
@@ -65,7 +67,7 @@ export default function Game(props: GameProps) {
 
     const onPairMatched = (isMatched: boolean) => {
         if (isMatched) {
-            setScore(score + 25 * (2**step));
+            setScore(score + 25 * (2 ** step));
         }
         else {
             setScore(score - 15 * step);
@@ -84,7 +86,7 @@ export default function Game(props: GameProps) {
 
     return (
         <Layout isSoundOn={isSoundOn} onSoundChange={() => setIsSoundOn(!isSoundOn)}>
-            {!hasWon ?
+            {hasWon ?
                 <Stack mx="auto" w="50%" align="center">
                     <Title color="gray.1">Congrats ! Your score is {score}</Title>
                     <Stack w="100%">
