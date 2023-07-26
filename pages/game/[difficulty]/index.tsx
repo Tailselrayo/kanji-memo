@@ -1,10 +1,11 @@
 import { GameLayout } from "@/components/GameLayout";
 import { Layout } from "@/components/Layout";
 import { Kanji } from "@/types/Kanji";
+import { Score } from "@/types/Score";
 import { User } from "@/types/User";
 import { getKanjisFromAPI } from "@/utils/getKanjisFromAPI";
 import { getKanjisInfo } from "@/utils/getKanjisInfo";
-import { updateKanji } from "@/utils/supabase";
+import { addScore, getPb, updateKanji } from "@/utils/supabase";
 import { Button, Stack, Title } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import { GetServerSidePropsContext } from "next";
@@ -53,7 +54,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
 export default function Game(props: GameProps) {
     const [isSoundOn, setIsSoundOn] = useLocalStorage<boolean>({ key: "isSoundOn" })
-    const [localBestScore, setLocalBestScore] = useLocalStorage({ key: "userPB", defaultValue: 0 });
+    const [localBestScore, setLocalBestScore] = useState<Score|null>(null);
     const [currentUser] = useLocalStorage<User|null>({key: "currentUser"})
     const router = useRouter();
     const [step, setStep] = useState(1);
@@ -61,13 +62,15 @@ export default function Game(props: GameProps) {
     const [score, setScore] = useState(0);
 
 
-    const onStepVictory = () => {
+    const onStepVictory = async () => {
+        updateKanji(currentUser!.id, props.kanji[0].kanji, 0)
         if (step === 3) {
             setHasWon(true);
-            setScore(score + 1000);
+            setScore(score+1000)
+            await addScore(currentUser!.id, score+1000, props.difficulty);
             if (currentUser) {
-                props.kanji.forEach( async (kanji, index) => {
-                    await updateKanji(currentUser.id, kanji.kanji, Math.ceil(3-index/4))
+                props.kanji.forEach( (kanji, index) => {
+                    updateKanji(currentUser.id, kanji.kanji, Math.ceil(3-index/4))
                 })
             }
             return;
@@ -86,16 +89,16 @@ export default function Game(props: GameProps) {
     }
 
 
-    useEffect(()=> {
-        if (score > localBestScore) {
-            setLocalBestScore(score);
+   useEffect(()=> {
+        if (!localBestScore&&currentUser) {
+            getPb(currentUser.id, props.difficulty).then(setLocalBestScore);
         }
-    },[score, localBestScore])
+    })
         
 
 
     return (
-        <Layout isSoundOn={isSoundOn} onSoundChange={() => setIsSoundOn(!isSoundOn)}>
+        <Layout isSoundOn={isSoundOn} onSoundChange={() => setIsSoundOn(!isSoundOn)} userPb={localBestScore?.score}>
             {hasWon ?
                 <Stack mx="auto" w="50%" align="center">
                     <Title color="gray.1">Congrats ! Your score is {score}</Title>
