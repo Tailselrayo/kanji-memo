@@ -49,6 +49,7 @@ export function IdentityModal(props: IdentityModalProps) {
                                     <TextInput
                                         label="Indentify yourself !"
                                         placeholder='Ex: Alex'
+                                        inputWrapperOrder={["label","error","input"]}
                                         error={props.isError?"Username already registered":""}
                                         value={props.name}
                                         onChange={(e) => props.onNameChange(e.target.value)}
