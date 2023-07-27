@@ -1,52 +1,48 @@
 import { Kanji } from "@/types/Kanji";
-import { computeLvlFromXp } from "@/utils/computeLvlFromXp";
-import { Group, Modal, Stack, Title, Text } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { useEffect, useState } from "react";
+import { Group, Stack, Title, Text } from "@mantine/core";
+import { DictionaryList } from "./DictionaryList";
 
 interface DictionaryModalProps {
-    opened: boolean;
-    informations: string;
-    onClose: () => void;
+    lvl: number;
+    informations: Kanji | null;
 }
 
 export function DictionaryModal(props: DictionaryModalProps) {
-    const [kanjiInfos, setKanjiInfos] = useState<Kanji|null>(null);
-
-    const informations = props.informations.split(';')
-    //information is of following form : ["kanji", "kanjiXp"]
-
-    const extractData = async () => {
-        return (await (await fetch(`${process.env.NEXT_PUBLIC_KANJI_API_URL}${informations[0]}`)).json())
-    }
-
-    useEffect(()=>{
-        if (!kanjiInfos&&!props.informations.length) {
-            extractData().then(setKanjiInfos)
-        }
-    })
-
-    return(
-        <Modal 
-            opened={props.opened}
-            onClose={props.onClose}
-        >
-            <Modal.Body bg="yellow.3">
-                <Modal.Content>
-                    <Stack>
-                        <Group w="100%" position="apart">
-                            <Title ff="cursive">{informations?.[0]}</Title>
-                            <Stack align="left">
-                                <Text ta="justify">{`Grade : ${kanjiInfos?.grade}`}</Text>
-                                <Text ta="justify">{`LV : ${computeLvlFromXp(parseInt(informations?.[1]))}`}</Text>
-                                <Text ta="justify">{`Strokes : ${kanjiInfos?.stroke_count}`}</Text>
-                            </Stack>
-                        </Group>
-                    </Stack>
-                </Modal.Content>
-            </Modal.Body>
-            
-        </Modal>
+    const meanings = props.informations?.meanings;
+    const kunReads = props.informations?.kun_readings;
+    const onReads = props.informations?.on_readings;
+    return (
+        <Stack>
+            <Group w="100%" position="apart">
+                <Title ff="cursive" fz={80}>{props.informations?.kanji}</Title>
+                <Stack align="left" spacing={0}>
+                    <Text ta="justify">{`Grade : ${props.informations?.grade}`}</Text>
+                    <Text ta="justify">{`LV : ${props.lvl}`}</Text>
+                    <Text ta="justify">{`Strokes : ${props.informations?.stroke_count}`}</Text>
+                </Stack>
+            </Group>
+            <Stack>
+                <DictionaryList
+                    accessLvl={props.lvl}
+                    list={meanings}
+                    label="Meanings"
+                />
+            </Stack>
+            <Stack>
+                <DictionaryList
+                    accessLvl={props.lvl}
+                    list={kunReads}
+                    label="KUN-Readings"
+                />
+            </Stack>
+            <Stack>
+                <DictionaryList
+                    accessLvl={props.lvl}
+                    list={onReads}
+                    label="ON-Readings"
+                />
+            </Stack>
+        </Stack>
     )
 
 }
