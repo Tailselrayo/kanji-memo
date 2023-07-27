@@ -17,7 +17,7 @@ export function KanjiInfoCard(props: KanjiInfoCardProps) {
             return c.green[5];
         }
         if (lvl===4) {
-            return c.blue[8];
+            return c.cyan[3];
         }
         if (lvl===3) {
             return c.yellow[5];
