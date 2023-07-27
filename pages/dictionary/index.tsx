@@ -159,7 +159,7 @@ export default function Dictionary(props: DictionaryProps) {
                     >
                         <DictionaryModal
                             informations={viewedKanjiInformations}
-                            lvl={computeLvlFromXp(xpOfSelectedKanij)}
+                            xp={xpOfSelectedKanij}
                         />
                     </Modal>
                 </Tabs.Panel>
