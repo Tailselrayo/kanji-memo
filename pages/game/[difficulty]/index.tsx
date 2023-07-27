@@ -63,14 +63,13 @@ export default function Game(props: GameProps) {
 
 
     const onStepVictory = async () => {
-        updateKanji(currentUser!.id, props.kanji[0].kanji, 0)
         if (step === 3) {
             setHasWon(true);
             setScore(score+1000)
             await addScore(currentUser!.id, score+1000, props.difficulty);
             if (currentUser) {
                 props.kanji.forEach( (kanji, index) => {
-                    updateKanji(currentUser.id, kanji.kanji, Math.ceil(3-index/4))
+                    updateKanji(currentUser.id, kanji.kanji, Math.ceil(3-index/4), props.difficulty)
                 })
             }
             return;
