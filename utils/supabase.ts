@@ -11,12 +11,12 @@ export async function selectUser(username: string) {
     return data
 }
 
-export async function updateKanji(id: number, kanji: string, xp: number) {
+export async function updateKanji(id: number, kanji: string, xp: number, grade: number) {
     const data = (await supabase.from("kanji-levels").select().match({ kanji, user: id }))?.data
         if (data&&data.length) {
             return (await supabase.from("kanji-levels").update({ xp: data[0].xp + xp }).match({ kanji, user: id }))
         }
-        return (await supabase.from("kanji-levels").insert({ user: id, kanji, xp }))
+        return (await supabase.from("kanji-levels").insert({ user: id, kanji, xp , grade}))
     
 }
 
@@ -31,4 +31,11 @@ export async function getPb(id: number, grade: number) {
         .order("score", { ascending: false })
         .limit(1)
         )?.data?.[0]);
+}
+
+export async function getUserXp(id: number, grade: number) {
+    return(
+        (await supabase.from("kanji-levels").select()
+        .match({user: id, grade}))?.data
+    )
 }

@@ -5,15 +5,15 @@ import { createUser, getPb, selectUser } from '@/utils/supabase'
 import { ActionIcon, Affix, Button, Stack, Text } from '@mantine/core'
 import { useDisclosure, useInputState, useLocalStorage } from '@mantine/hooks'
 import { PostgrestSingleResponse } from '@supabase/supabase-js'
-import { IconLogout } from '@tabler/icons-react'
+import { IconBook, IconLogout } from '@tabler/icons-react'
 import Link from 'next/link'
 import { FormEvent, useEffect, useState } from 'react'
 
 export default function Home() {
   const [users, setUsers] = useLocalStorage<string[]>({ key: "users", defaultValue: [] })
   const [isSoundOn, setIsSoundOn] = useLocalStorage<boolean>({ key: "isSoundOn", defaultValue: true });
-  const [currentUser, setCurrentUser] = useLocalStorage<User|null>({ key: "currentUser", defaultValue: null });
-  const [userPb, setUserPb] = useLocalStorage<User|null>({key: "userPB", defaultValue: null});
+  const [currentUser, setCurrentUser] = useLocalStorage<User | null>({ key: "currentUser", defaultValue: null });
+  const [userPb, setUserPb] = useLocalStorage<User | null>({ key: "userPB", defaultValue: null });
   const [isError, setIsError] = useState(false);
   const [inputValue, setInputValue] = useInputState("");
 
@@ -21,8 +21,8 @@ export default function Home() {
 
   const onRegister = async (e: FormEvent) => {
     e.preventDefault();
-    onIdentification((await createUser(inputValue))) 
-    
+    onIdentification((await createUser(inputValue)))
+
 
   }
 
@@ -32,7 +32,7 @@ export default function Home() {
   }
 
   const onIdentification = (data: PostgrestSingleResponse<User>) => {
-    if (!(data.status === 201||data.status===200)) {
+    if (!(data.status === 201 || data.status === 200)) {
       setIsError(true)
       return;
     }
@@ -76,6 +76,13 @@ export default function Home() {
           <ActionIcon onClick={onLogout} color="red" size={40}>
             <IconLogout size={40} />
           </ActionIcon>
+        </Affix>
+        <Affix position={{ left: 20, bottom: 20 }}>
+          <Link href="/dictionary">
+            <ActionIcon color="orange.3" size={50}>
+              <IconBook size={50} />
+            </ActionIcon>
+          </Link>
         </Affix>
       </Layout>
     </>

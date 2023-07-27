@@ -3,4 +3,6 @@ export interface Kanji {
     meanings: string[];
     kun_readings: string[];
     on_readings: string[];
+    grade: string;
+    stroke_count: number;
 }
