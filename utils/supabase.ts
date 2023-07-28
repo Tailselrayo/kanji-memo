@@ -21,21 +21,28 @@ export async function updateKanji(id: number, kanji: string, xp: number, grade: 
 }
 
 export async function addScore(id: number, score: number, grade: number) {
-    return (await supabase.from("scores").insert({ user: id, score, grade }))
+    return (await supabase.from("scores").insert({ user_id: id, score, grade }))
 }
 
 export async function getPb(id: number, grade: number) {
     return (
         (await supabase.from("scores").select()
-        .match({ user: id, grade })
+        .match({ user_id: id, grade })
         .order("score", { ascending: false })
         .limit(1)
-        )?.data?.[0]);
+        ))?.data?.[0];
 }
 
 export async function getUserXp(id: number, grade: number) {
     return(
         (await supabase.from("kanji-levels").select()
         .match({user: id, grade}))?.data
+    )
+}
+
+export async function getLeaderBoard() {
+    return(
+        (await supabase.rpc("get_leaderboard"))
+        //made a SQL request outside code on supabase
     )
 }

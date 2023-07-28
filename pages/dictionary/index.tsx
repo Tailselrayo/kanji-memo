@@ -133,14 +133,14 @@ export default function Dictionary(props: DictionaryProps) {
                             />
                         </Stack>
                     </Affix>
-                    <Affix position={{ top: 0, left: 0 }} p="xs">
+                    <Affix position={{ top: 0, left: 0 }} p="xs" zIndex="1">
                         <Link href="/">
                             <ActionIcon color="gray.1" size={40}>
                                 <IconHome2 size={40} />
                             </ActionIcon>
                         </Link>
                     </Affix>
-                    <Affix position={{ top: 0, right: 0 }} py={1} px={5}>
+                    <Affix position={{ top: 0, right: 0 }} py={1} px={5} zIndex="1">
                         <Stack spacing={0}>
                             <Text ta="center" fz="lg" color="gray.2">Stats of</Text>
                             <Text ta="center" fz="xl" color="gray.2">{currentUser?.username}</Text>
