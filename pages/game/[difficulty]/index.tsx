@@ -53,7 +53,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 }
 
 export default function Game(props: GameProps) {
-    const [isSoundOn, setIsSoundOn] = useLocalStorage<boolean>({ key: "isSoundOn" })
     const [localBestScore, setLocalBestScore] = useState<Score|null>(null);
     const [currentUser] = useLocalStorage<User|null>({key: "currentUser"})
     const router = useRouter();
@@ -97,7 +96,7 @@ export default function Game(props: GameProps) {
 
 
     return (
-        <Layout isSoundOn={isSoundOn} onSoundChange={() => setIsSoundOn(!isSoundOn)} userPb={localBestScore?.score}>
+        <Layout userPb={localBestScore?.score}>
             {hasWon ?
                 <Stack mx="auto" w="50%" align="center">
                     <Title color="gray.1">Congrats ! Your score is {score}</Title>

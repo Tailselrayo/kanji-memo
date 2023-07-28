@@ -1,8 +1,8 @@
 import { IdentityModal } from '@/components/IdentityModal'
 import { Layout } from '@/components/Layout'
 import { User } from '@/types/User'
-import { createUser, getPb, selectUser } from '@/utils/supabase'
-import { ActionIcon, Affix, Button, Stack, Text } from '@mantine/core'
+import { createUser, getLeaderBoard, getPb, selectUser } from '@/utils/supabase'
+import { ActionIcon, Affix, Button, Group, Stack, Text } from '@mantine/core'
 import { useDisclosure, useInputState, useLocalStorage } from '@mantine/hooks'
 import { PostgrestSingleResponse } from '@supabase/supabase-js'
 import { IconBook, IconLogout } from '@tabler/icons-react'
@@ -10,14 +10,10 @@ import Link from 'next/link'
 import { FormEvent, useEffect, useState } from 'react'
 
 export default function Home() {
-  const [users, setUsers] = useLocalStorage<string[]>({ key: "users", defaultValue: [] })
-  const [isSoundOn, setIsSoundOn] = useLocalStorage<boolean>({ key: "isSoundOn", defaultValue: true });
   const [currentUser, setCurrentUser] = useLocalStorage<User | null>({ key: "currentUser", defaultValue: null });
-  const [userPb, setUserPb] = useLocalStorage<User | null>({ key: "userPB", defaultValue: null });
   const [isError, setIsError] = useState(false);
   const [inputValue, setInputValue] = useInputState("");
-
-  const [opened, modalHandlers] = useDisclosure(true);
+  const [opened, modalHandlers] = useDisclosure(false);
 
   const onRegister = async (e: FormEvent) => {
     e.preventDefault();
@@ -51,7 +47,7 @@ export default function Home() {
   return (
     <>
       <IdentityModal
-        isRegister={!users.length}
+        isRegister={false}
         opened={opened && !currentUser}
         isError={isError}
         name={inputValue}
@@ -61,23 +57,32 @@ export default function Home() {
         onRegister={onRegister}
         onTabChange={() => setIsError(false)}
       />
-      <Layout isSoundOn={isSoundOn} onSoundChange={() => setIsSoundOn(!isSoundOn)} isOnHome>
+      <Layout isOnHome>
         <Stack align="center">
           <Link style={{ display: "flex", textDecoration: "none", width: "50%" }} href="/choose-level">
             <Button size="xl" w="100%" variant="gradient" gradient={{ from: "red", to: "orange" }} h={50}>
               Play
             </Button>
           </Link>
-          <Button size="xl" w="50%" h={50} variant="gradient" gradient={{ from: "blue", to: "teal" }}>
-            Shop
-          </Button>
+          <Group grow>
+            <Link style={{ display: "flex", textDecoration: "none", width: "50%" }} href="/dictionary">
+              <Button size="xl" h={50} variant="gradient" gradient={{ from: "blue", to: "teal" }}>
+                Kanji Stats
+              </Button>
+            </Link>
+            <Link style={{ display: "flex", textDecoration: "none", width: "50%" }} href="/leaderboard">
+              <Button size="xl" h={50} variant="gradient" gradient={{from:"yellow",to:"orange"}}>
+                Leaderboard
+              </Button>
+            </Link>
+          </Group>
         </Stack>
-        <Affix position={{ right: 20, bottom: 20 }}>
+        <Affix position={{ right: 20, bottom: 20 }} zIndex={1}>
           <ActionIcon onClick={onLogout} color="red" size={40}>
             <IconLogout size={40} />
           </ActionIcon>
         </Affix>
-        <Affix position={{ left: 20, bottom: 20 }}>
+        <Affix position={{ left: 20, bottom: 20 }} zIndex={1}>
           <Link href="/dictionary">
             <ActionIcon color="orange.3" size={50}>
               <IconBook size={50} />
