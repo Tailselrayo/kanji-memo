@@ -58,20 +58,20 @@ export default function Home() {
         onTabChange={() => setIsError(false)}
       />
       <Layout isOnHome>
-        <Stack align="center">
-          <Link style={{ display: "flex", textDecoration: "none", width: "50%" }} href="/choose-level">
+        <Stack mx="auto" align="center" w="50%">
+          <Link style={{ display: "flex", textDecoration: "none", width: "100%" }} href="/choose-level">
             <Button size="xl" w="100%" variant="gradient" gradient={{ from: "red", to: "orange" }} h={50}>
               Play
             </Button>
           </Link>
-          <Group grow>
-            <Link style={{ display: "flex", textDecoration: "none", width: "50%" }} href="/dictionary">
-              <Button size="xl" h={50} variant="gradient" gradient={{ from: "blue", to: "teal" }}>
+          <Group grow w="100%">
+            <Link style={{ display: "flex", textDecoration: "none", width: "100%" }} href="/dictionary">
+              <Button size="xl" h={50} variant="gradient" w="100%" gradient={{ from: "blue", to: "teal" }}>
                 Kanji Stats
               </Button>
             </Link>
-            <Link style={{ display: "flex", textDecoration: "none", width: "50%" }} href="/leaderboard">
-              <Button size="xl" h={50} variant="gradient" gradient={{from:"yellow",to:"orange"}}>
+            <Link style={{ display: "flex", textDecoration: "none", width: "100%" }} href="/leaderboard">
+              <Button size="xl" h={50} variant="gradient" w="100%" gradient={{from:"yellow",to:"orange"}}>
                 Leaderboard
               </Button>
             </Link>

@@ -7,7 +7,6 @@ import { User } from "@/types/User";
 import { useEffect, useState } from "react";
 import { DictionaryModal } from "@/components/DictionaryModal";
 import { Kanji } from "@/types/Kanji";
-import { computeLvlFromXp } from "@/utils/computeLvlFromXp";
 import Link from "next/link";
 import { IconHome2 } from "@tabler/icons-react";
 
@@ -145,6 +144,9 @@ export default function Dictionary(props: DictionaryProps) {
                             <Text ta="center" fz="lg" color="gray.2">Stats of</Text>
                             <Text ta="center" fz="xl" color="gray.2">{currentUser?.username}</Text>
                         </Stack>
+                    </Affix>
+                    <Affix position={{bottom:0, right:0}} p="xs">
+                        <Text color="gray.1" ta="center">{dataBaseKanjis?.length}/{props.kanjis[selectedGrade].length}</Text>
                     </Affix>
                     <Modal
                         size="xs"
